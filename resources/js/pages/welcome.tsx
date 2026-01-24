@@ -1,3 +1,4 @@
+import Navbar from '@/components/navbar';
 import { Head } from '@inertiajs/react';
 
 export default function Welcome() {
@@ -8,7 +9,9 @@ export default function Welcome() {
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
 
-            <div className="flex justify-center items-center content-center w-full h-screen">
+            <Navbar />
+
+            <div className="flex h-screen w-full content-center items-center justify-center">
                 <p>Hello world</p>
             </div>
         </>
