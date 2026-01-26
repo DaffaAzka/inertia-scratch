@@ -1,12 +1,12 @@
 import { Head } from '@inertiajs/react';
+import { ReactNode } from 'react';
 import { AppSidebar } from '../sidebar';
 import { SidebarInset, SidebarProvider, SidebarTrigger } from '../ui/sidebar';
-import { ReactNode } from 'react';
 
 export default function AuthLayout({ children, title }: { children: ReactNode; title: string }) {
     return (
         <>
-            <main className="bg-slate-100">
+            <main>
                 <Head title={title}>
                     <link rel="preconnect" href="https://fonts.bunny.net" />
                     <link
@@ -16,7 +16,7 @@ export default function AuthLayout({ children, title }: { children: ReactNode; t
                 </Head>
                 <SidebarProvider>
                     <AppSidebar />
-                    <SidebarInset>
+                    <SidebarInset className="bg-slate-100">
                         <header className="flex h-16 shrink-0 items-center gap-2">
                             <div className="flex items-center gap-2 px-4">
                                 <SidebarTrigger className="-ml-1" />

@@ -5,7 +5,7 @@ import * as React from 'react';
 
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
-import { usePage } from '@inertiajs/react';
+import { NavMain } from './nav-main';
 
 const data = {
     navMain: [
@@ -95,39 +95,9 @@ const data = {
             ],
         },
     ],
-    navSecondary: [
-        {
-            title: 'Support',
-            url: '#',
-            icon: LifeBuoy,
-        },
-        {
-            title: 'Feedback',
-            url: '#',
-            icon: Send,
-        },
-    ],
-    projects: [
-        {
-            name: 'Design Engineering',
-            url: '#',
-            icon: Frame,
-        },
-        {
-            name: 'Sales & Marketing',
-            url: '#',
-            icon: PieChart,
-        },
-        {
-            name: 'Travel',
-            url: '#',
-            icon: Map,
-        },
-    ],
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
-
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader>
@@ -140,9 +110,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 </SidebarMenu>
             </SidebarHeader>
             <SidebarContent>
-                {/* <NavMain items={data.navMain} /> */}
-                {/* <NavProjects projects={data.projects} /> */}
-                {/* <NavSecondary items={data.navSecondary} className="mt-auto" /> */}
+                <NavMain items={data.navMain} />
             </SidebarContent>
             <SidebarFooter>
                 <NavUser />
