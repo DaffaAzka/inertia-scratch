@@ -1,25 +1,26 @@
+import InputForm from '@/components/input_form';
 import GuestLayout from '@/components/layouts/guest_layout';
-import { Card, CardContent, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
-import { Head } from '@inertiajs/react';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 export default function LoginPage() {
     return (
-        <GuestLayout>
-            <Head title="Login - ONYX Storage">
-                <link rel="preconnect" href="https://fonts.bunny.net" />
-                <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
-            </Head>
-
+        <GuestLayout title="Login">
             <div className="flex min-h-screen w-full items-center justify-center">
-                <Card className="mb-12 w-full max-w-3xl">
+                <Card className="mb-12 w-full max-w-xl">
                     <CardHeader>
-                        <CardTitle>Continue to Sign In</CardTitle>
+                        <CardTitle className="text-center">Continue to Sign In</CardTitle>
                     </CardHeader>
                     <CardContent>
-                        <p>Card Content</p>
+                        <div className="flex flex-col gap-5">
+                            <InputForm name="email" text="Email Address" type="email" />
+                            <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
+                                <InputForm name="password" text="Password" type="password" />
+                                <InputForm name="retry_password" text="Retype Password" type="password" />
+                            </div>
+
+                            <Button>Sign In</Button>
+                        </div>
                     </CardContent>
-                    <CardFooter>
-                        <p>Card Footer</p>
-                    </CardFooter>
                 </Card>
             </div>
         </GuestLayout>

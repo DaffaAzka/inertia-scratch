@@ -9,3 +9,5 @@ Route::get('/', function () {
 })->name('home');
 
 Route::get('/login', [AuthController::class, 'login']);
+Route::get('/register', [AuthController::class, 'register']);
+Route::post('/register', [AuthController::class, 'createUser']);
