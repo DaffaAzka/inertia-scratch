@@ -1,19 +1,15 @@
-import Navbar from '@/components/navbar';
+import GuestLayout from '@/components/layouts/guest_layout';
 import { Head } from '@inertiajs/react';
 
 export default function Welcome() {
     return (
-        <>
-            <Head title="Welcome">
+        <GuestLayout>
+            <Head title="Welcome - ONYX Storage">
                 <link rel="preconnect" href="https://fonts.bunny.net" />
                 <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600" rel="stylesheet" />
             </Head>
 
-            <Navbar />
-
-            <div className="flex h-screen w-full content-center items-center justify-center">
-                <p>Hello world</p>
-            </div>
-        </>
+            <div className="flex h-screen w-full content-center items-center justify-center"></div>
+        </GuestLayout>
     );
 }
