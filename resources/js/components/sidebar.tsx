@@ -1,110 +1,145 @@
 'use client';
 
-import { BookOpen, Bot, Frame, LifeBuoy, Map, PieChart, Send, Settings2, SquareTerminal } from 'lucide-react';
 import * as React from 'react';
 
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
+import { authorizations } from '@/lib/helpers';
+import { usePage } from '@inertiajs/react';
+import { Activity, ClipboardList, LayoutDashboard, Package, RefreshCw, Users } from 'lucide-react';
 import { NavMain } from './nav-main';
 
-const data = {
-    navMain: [
-        {
-            title: 'Playground',
-            url: '#',
-            icon: SquareTerminal,
-            isActive: true,
-            items: [
-                {
-                    title: 'History',
-                    url: '#',
-                },
-                {
-                    title: 'Starred',
-                    url: '#',
-                },
-                {
-                    title: 'Settings',
-                    url: '#',
-                },
-            ],
-        },
-        {
-            title: 'Models',
-            url: '#',
-            icon: Bot,
-            items: [
-                {
-                    title: 'Genesis',
-                    url: '#',
-                },
-                {
-                    title: 'Explorer',
-                    url: '#',
-                },
-                {
-                    title: 'Quantum',
-                    url: '#',
-                },
-            ],
-        },
-        {
-            title: 'Documentation',
-            url: '#',
-            icon: BookOpen,
-            items: [
-                {
-                    title: 'Introduction',
-                    url: '#',
-                },
-                {
-                    title: 'Get Started',
-                    url: '#',
-                },
-                {
-                    title: 'Tutorials',
-                    url: '#',
-                },
-                {
-                    title: 'Changelog',
-                    url: '#',
-                },
-            ],
-        },
-        {
-            title: 'Settings',
-            url: '#',
-            icon: Settings2,
-            items: [
-                {
-                    title: 'General',
-                    url: '#',
-                },
-                {
-                    title: 'Team',
-                    url: '#',
-                },
-                {
-                    title: 'Billing',
-                    url: '#',
-                },
-                {
-                    title: 'Limits',
-                    url: '#',
-                },
-            ],
-        },
-    ],
+export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
+    auth: {
+        role: string;
+    };
 };
 
 export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+    const { auth } = usePage<PageProps>().props;
+
+    const data = {
+        navMain: [
+            {
+                title: 'Dashboard',
+                url: '#',
+                icon: LayoutDashboard,
+                isActive: true,
+                isShow: true,
+            },
+
+            {
+                title: 'Borrowings',
+                url: '#',
+                icon: ClipboardList,
+                isActive: true,
+                isShow: true,
+                items: [
+                    {
+                        title: 'Manage Borrowings',
+                        url: '#',
+                        isActive: true,
+                        isShow: true,
+                    },
+                    {
+                        title: 'Borrowing Report',
+                        url: '#',
+                        isActive: true,
+                        isShow: authorizations(auth.role, ['admin', 'officer']),
+                    },
+                ],
+            },
+
+            {
+                title: 'Returns',
+                url: '#',
+                icon: RefreshCw,
+                isActive: true,
+                isShow: true,
+                items: [
+                    {
+                        title: 'Manage Returns',
+                        url: '#',
+                        isActive: true,
+                        isShow: true,
+                    },
+                    {
+                        title: 'Manage Fines',
+                        url: '#',
+                        isActive: true,
+                        isShow: authorizations(auth.role, ['admin', 'officer']),
+                    },
+                    {
+                        title: 'Return Report',
+                        url: '#',
+                        isActive: true,
+                        isShow: authorizations(auth.role, ['admin', 'officer']),
+                    },
+                    {
+                        title: 'Fine Report',
+                        url: '#',
+                        isActive: true,
+                        isShow: authorizations(auth.role, ['admin', 'officer']),
+                    },
+                ],
+            },
+
+            {
+                title: 'Items',
+                url: '#',
+                icon: Package,
+                isActive: true,
+                isShow: authorizations(auth.role, ['admin']),
+                items: [
+                    {
+                        title: 'Manage Items',
+                        url: '#',
+                        isActive: true,
+                        isShow: true,
+                    },
+                    {
+                        title: 'Categories',
+                        url: '#',
+                        isActive: true,
+                        isShow: true,
+                    },
+                ],
+            },
+
+            {
+                title: 'Users',
+                url: '#',
+                icon: Users,
+                isActive: true,
+                items: [
+                    {
+                        title: 'Manage Users',
+                        url: '#',
+                        isActive: true,
+                        isShow: true,
+                    },
+                ],
+            },
+
+            {
+                title: 'Activity Logs',
+                url: '#',
+                icon: Activity,
+                isActive: true,
+                isShow: true,
+            },
+        ],
+    };
+
     return (
         <Sidebar variant="inset" {...props}>
             <SidebarHeader>
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <span className="truncate font-medium">Onyx Storage</span>
+                            <div className="flex flex-row justify-between">
+                                <span className="truncate font-medium">Onyx Storage</span>
+                            </div>
                         </SidebarMenuButton>
                     </SidebarMenuItem>
                 </SidebarMenu>

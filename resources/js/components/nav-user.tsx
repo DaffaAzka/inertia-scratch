@@ -1,4 +1,4 @@
-import { ChevronsUpDown, LogOut, Sparkles } from 'lucide-react';
+import { BellIcon, ChevronsUpDown, LogOut, Sparkles } from 'lucide-react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
 import {
@@ -55,6 +55,10 @@ export function NavUser() {
                             <DropdownMenuItem>
                                 <Sparkles />
                                 Edit your profile
+                            </DropdownMenuItem>
+                            <DropdownMenuItem>
+                                <BellIcon />
+                                Notifications
                             </DropdownMenuItem>
                         </DropdownMenuGroup>
 
