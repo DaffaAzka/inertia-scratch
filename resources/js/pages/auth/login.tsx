@@ -1,7 +1,7 @@
 import LoadingButton from '@/components/button_loading';
 import InputForm from '@/components/input_form';
 import GuestLayout from '@/components/layouts/guest_layout';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Link, router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 export default function LoginPage() {
@@ -38,6 +38,7 @@ export default function LoginPage() {
                 <Card className="mb-12 w-full max-w-xl">
                     <CardHeader>
                         <CardTitle className="text-center text-xl">Sign In</CardTitle>
+                        <CardDescription className="text-center">Enter your email below to login to your account</CardDescription>
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="flex flex-col gap-5">

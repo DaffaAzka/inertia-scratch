@@ -1,7 +1,8 @@
-import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { Category } from '@/lib/types';
+import { InfoIcon, PencilIcon, TrashIcon } from 'lucide-react';
 
 export default function DataTable({ categories }: { categories: Category[] }) {
     return (
@@ -30,8 +31,16 @@ export default function DataTable({ categories }: { categories: Category[] }) {
                                         </TableCell>
                                         <TableCell>0</TableCell>
                                         <TableCell className="hidden lg:table-cell">{category.user?.name ?? 'N/A'}</TableCell>
-                                        <TableCell className="text-right">
-                                            <Badge>Badge</Badge>
+                                        <TableCell className="flex flex-row justify-end gap-2">
+                                            <Button variant={'default'} size={'icon-sm'}>
+                                                <PencilIcon />
+                                            </Button>
+                                            <Button variant={'outline'} size={'icon-sm'}>
+                                                <InfoIcon />
+                                            </Button>
+                                            <Button variant={'destructive'} size={'icon-sm'}>
+                                                <TrashIcon />
+                                            </Button>
                                         </TableCell>
                                     </TableRow>
                                 </>
