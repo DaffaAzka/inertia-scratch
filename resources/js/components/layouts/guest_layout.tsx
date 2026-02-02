@@ -1,5 +1,5 @@
 import { Head } from '@inertiajs/react';
-import { ReactNode } from 'react';
+import type { ReactNode } from 'react';
 import Navbar from '../navbar';
 
 export default function GuestLayout({ children, title }: { children: ReactNode; title: string }) {

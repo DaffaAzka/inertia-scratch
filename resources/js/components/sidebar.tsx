@@ -1,12 +1,12 @@
 'use client';
 
+import { usePage } from '@inertiajs/react';
+import { Activity, ClipboardList, LayoutDashboard, Package, RefreshCw, Users } from 'lucide-react';
 import * as React from 'react';
 
 import { NavUser } from '@/components/nav-user';
 import { Sidebar, SidebarContent, SidebarFooter, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem } from '@/components/ui/sidebar';
 import { authorizations } from '@/lib/helpers';
-import { usePage } from '@inertiajs/react';
-import { Activity, ClipboardList, LayoutDashboard, Package, RefreshCw, Users } from 'lucide-react';
 import { NavMain } from './nav-main';
 
 export type PageProps<T extends Record<string, unknown> = Record<string, unknown>> = T & {
@@ -22,7 +22,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
         navMain: [
             {
                 title: 'Dashboard',
-                url: '#',
+                url: '/dashboard',
                 icon: LayoutDashboard,
                 isActive: true,
                 isShow: true,
@@ -98,8 +98,8 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         isShow: true,
                     },
                     {
-                        title: 'Categories',
-                        url: '#',
+                        title: 'Manage Categories',
+                        url: '/categories',
                         isActive: true,
                         isShow: true,
                     },

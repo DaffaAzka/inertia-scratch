@@ -1,27 +1,27 @@
+import { Link, router, usePage } from '@inertiajs/react';
+import { useState } from 'react';
 import LoadingButton from '@/components/button_loading';
 import InputForm from '@/components/input_form';
 import GuestLayout from '@/components/layouts/guest_layout';
 
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Link, router, usePage } from '@inertiajs/react';
-import { useState } from 'react';
 
 export default function RegisterPage() {
     const { errors } = usePage().props;
 
     const [values, setValues] = useState({
-        fullname: null,
-        email: null,
-        password: null,
-        retry_password: null,
+        fullname: '',
+        email: '',
+        password: '',
+        retry_password: '',
     });
 
     const [loading, setLoading] = useState(false);
 
-    function handleChange(e: { target: { id: any; value: any } }) {
-        setValues((values: any) => ({
+    function handleChange(e: { target: { name: string; value: string } }) {
+        setValues((values) => ({
             ...values,
-            [e.target.id]: e.target.value,
+            [e.target.name]: e.target.value,
         }));
     }
 
@@ -45,18 +45,40 @@ export default function RegisterPage() {
                         </CardHeader>
                         <CardContent>
                             <form className="flex flex-col gap-5" onSubmit={handleSubmit}>
-                                <InputForm name="fullname" text="Fullname" type="text" handleChange={handleChange} error={errors.fullname} />
+                                <InputForm
+                                    name="fullname"
+                                    text="Fullname"
+                                    type="text"
+                                    handleChange={handleChange}
+                                    error={errors.fullname}
+                                    value={values.fullname}
+                                />
 
-                                <InputForm name="email" text="Email Address" type="email" handleChange={handleChange} error={errors.email} />
+                                <InputForm
+                                    name="email"
+                                    text="Email Address"
+                                    type="email"
+                                    handleChange={handleChange}
+                                    error={errors.email}
+                                    value={values.email}
+                                />
 
                                 <div className="grid grid-cols-1 gap-5 lg:grid-cols-2">
-                                    <InputForm name="password" text="Password" type="password" handleChange={handleChange} error={errors.password} />
+                                    <InputForm
+                                        name="password"
+                                        text="Password"
+                                        type="password"
+                                        handleChange={handleChange}
+                                        error={errors.password}
+                                        value={values.password}
+                                    />
                                     <InputForm
                                         name="retry_password"
                                         text="Retype Password"
                                         type="password"
                                         handleChange={handleChange}
                                         error={errors.retry_password}
+                                        value={values.retry_password}
                                     />
                                 </div>
 

@@ -10,14 +10,14 @@ export default function LoginPage() {
     const [loading, setLoading] = useState(false);
 
     const [values, setValues] = useState({
-        email: null,
-        password: null,
+        email: '',
+        password: '',
     });
 
-    function handleChange(e: { target: { id: any; value: any } }) {
-        setValues((values: any) => ({
+    function handleChange(e: { target: { name: string; value: string } }) {
+        setValues((values) => ({
             ...values,
-            [e.target.id]: e.target.value,
+            [e.target.name]: e.target.value,
         }));
     }
 
@@ -41,8 +41,22 @@ export default function LoginPage() {
                     </CardHeader>
                     <CardContent>
                         <form onSubmit={handleSubmit} className="flex flex-col gap-5">
-                            <InputForm handleChange={handleChange} name="email" text="Email Address" type="email" error={errors.email} />
-                            <InputForm handleChange={handleChange} name="password" text="Password" type="password" error={errors.password} />
+                            <InputForm
+                                handleChange={handleChange}
+                                name="email"
+                                text="Email Address"
+                                type="email"
+                                error={errors.email}
+                                value={values.email}
+                            />
+                            <InputForm
+                                handleChange={handleChange}
+                                name="password"
+                                text="Password"
+                                type="password"
+                                error={errors.password}
+                                value={values.password}
+                            />
 
                             <div className="flex flex-col gap-3">
                                 <LoadingButton text="Continue to Sign In" type="submit" loading={loading} />

@@ -1,3 +1,4 @@
+import { Link, usePage } from '@inertiajs/react';
 import { BellIcon, ChevronsUpDown, LogOut, Sparkles } from 'lucide-react';
 
 import { Avatar, AvatarFallback } from '@/components/ui/avatar';
@@ -10,7 +11,6 @@ import {
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
 import { SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar } from '@/components/ui/sidebar';
-import { Link, usePage } from '@inertiajs/react';
 
 export interface User {
     id: number;
