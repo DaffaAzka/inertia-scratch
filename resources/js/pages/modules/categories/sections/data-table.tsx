@@ -3,8 +3,32 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
 import type { Category } from '@/lib/types';
 import { InfoIcon, PencilIcon, TrashIcon } from 'lucide-react';
+import { useState } from 'react';
+import DetailModal from './detail-modal';
 
 export default function DataTable({ categories }: { categories: Category[] }) {
+    const [detailModal, setDetailModal] = useState<{
+        category: Category | null;
+        isOpen: boolean;
+    }>({
+        category: null,
+        isOpen: false,
+    });
+
+    function handleClick(category: Category, isOpen: boolean) {
+        setDetailModal({
+            category: category,
+            isOpen: isOpen,
+        });
+    }
+
+    function handleCloseModal() {
+        setDetailModal({
+            category: null,
+            isOpen: false,
+        });
+    }
+
     return (
         <>
             <Card>
@@ -12,7 +36,7 @@ export default function DataTable({ categories }: { categories: Category[] }) {
                     <Table>
                         <TableHeader>
                             <TableRow>
-                                <TableHead className="">No</TableHead>
+                                <TableHead>No</TableHead>
                                 <TableHead>Name</TableHead>
                                 <TableHead className="w-12.5 text-ellipsis lg:w-fit">Description</TableHead>
                                 <TableHead>Items</TableHead>
@@ -22,33 +46,41 @@ export default function DataTable({ categories }: { categories: Category[] }) {
                         </TableHeader>
                         <TableBody>
                             {categories.map((category, index) => (
-                                <>
-                                    <TableRow>
-                                        <TableCell className="font-medium">{index + 1}</TableCell>
-                                        <TableCell>{category.name}</TableCell>
-                                        <TableCell className="">
-                                            <div className="w-20 truncate lg:w-fit">{category.description}</div>
-                                        </TableCell>
-                                        <TableCell>0</TableCell>
-                                        <TableCell className="hidden lg:table-cell">{category.user?.name ?? 'N/A'}</TableCell>
-                                        <TableCell className="flex flex-row justify-end gap-2">
-                                            <Button variant={'default'} size={'icon-sm'}>
-                                                <PencilIcon />
-                                            </Button>
-                                            <Button variant={'outline'} size={'icon-sm'}>
-                                                <InfoIcon />
-                                            </Button>
-                                            <Button variant={'destructive'} size={'icon-sm'}>
-                                                <TrashIcon />
-                                            </Button>
-                                        </TableCell>
-                                    </TableRow>
-                                </>
+                                <TableRow key={category.id}>
+                                    {' '}
+                                    {/* ← Tambah key! */}
+                                    <TableCell className="font-medium">{index + 1}</TableCell>
+                                    <TableCell>{category.name}</TableCell>
+                                    <TableCell>
+                                        <div className="w-20 truncate lg:w-fit">{category.description}</div>
+                                    </TableCell>
+                                    <TableCell>0</TableCell>
+                                    <TableCell className="hidden lg:table-cell">{category.user?.name ?? 'N/A'}</TableCell>
+                                    <TableCell className="flex flex-row justify-end gap-2">
+                                        <Button variant="default" size="icon-sm" onClick={() => handleClick(category, true)}>
+                                            <PencilIcon />
+                                        </Button>
+                                        <Button variant="outline" size="icon-sm" onClick={() => handleClick(category, true)}>
+                                            <InfoIcon />
+                                        </Button>
+                                        <Button variant="destructive" size="icon-sm" onClick={() => handleClick(category, true)}>
+                                            <TrashIcon />
+                                        </Button>
+                                    </TableCell>
+                                </TableRow>
                             ))}
                         </TableBody>
-                    </Table>{' '}
+                    </Table>
                 </CardContent>
             </Card>
+
+            {detailModal.category && detailModal.isOpen ? (
+                <>
+                    <DetailModal isOpen={detailModal.isOpen} category={detailModal.category} onClose={handleCloseModal} />
+                </>
+            ) : (
+                <></>
+            )}
         </>
     );
 }
