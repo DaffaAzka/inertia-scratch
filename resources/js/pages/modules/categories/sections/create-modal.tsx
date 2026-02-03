@@ -2,7 +2,7 @@ import LoadingButton from '@/components/button_loading';
 import InputForm from '@/components/input_form';
 import TextareaForm from '@/components/textarea_form';
 import { Button } from '@/components/ui/button';
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
+import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/dialog';
 import { router, usePage } from '@inertiajs/react';
 import { useState } from 'react';
 import { toast } from 'sonner';
@@ -52,28 +52,26 @@ export default function CreateModal() {
             <DialogContent className="max-w-sm overflow-hidden md:max-w-md lg:max-w-lg">
                 <DialogHeader className="flex flex-col gap-5">
                     <DialogTitle>Create new category</DialogTitle>
-                    <DialogDescription asChild>
-                        <form className="flex flex-col gap-5 overflow-hidden" onSubmit={handleSubmit}>
-                            <InputForm
-                                name="name"
-                                text="Name Category"
-                                type="text"
-                                handleChange={handleChange}
-                                usePlaceholder={true}
-                                error={errors.name}
-                                value={values.name}
-                            />
-                            <TextareaForm
-                                name="description"
-                                text="Description Category"
-                                handleChange={handleChange}
-                                usePlaceholder={true}
-                                error={errors.description}
-                                value={values.description}
-                            />
-                            <LoadingButton text="Submit" type="submit" loading={loading} />
-                        </form>
-                    </DialogDescription>
+                    <form className="flex flex-col gap-5 overflow-hidden" onSubmit={handleSubmit}>
+                        <InputForm
+                            name="name"
+                            text="Name Category"
+                            type="text"
+                            handleChange={handleChange}
+                            usePlaceholder={true}
+                            error={errors.name}
+                            value={values.name}
+                        />
+                        <TextareaForm
+                            name="description"
+                            text="Description Category"
+                            handleChange={handleChange}
+                            usePlaceholder={true}
+                            error={errors.description}
+                            value={values.description}
+                        />
+                        <LoadingButton text="Submit" type="submit" loading={loading} />
+                    </form>
                 </DialogHeader>
             </DialogContent>
         </Dialog>

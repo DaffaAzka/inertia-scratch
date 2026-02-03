@@ -1,7 +1,7 @@
 'use client';
 
 import { usePage } from '@inertiajs/react';
-import { Activity, ClipboardList, DatabaseBackupIcon, DatabaseIcon, LayoutDashboard, Package, RefreshCw, Users } from 'lucide-react';
+import { Activity, ClipboardList, DatabaseBackupIcon, LayoutDashboard, Package, RefreshCw, Users } from 'lucide-react';
 import * as React from 'react';
 
 import { NavUser } from '@/components/nav-user';
@@ -137,7 +137,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 <SidebarMenu>
                     <SidebarMenuItem>
                         <SidebarMenuButton size="lg" asChild>
-                            <div className="flex flex-row gap-2 items-center content-center">
+                            <div className="flex flex-row content-center items-center gap-2">
                                 <DatabaseBackupIcon size={8} />
                                 <span className="truncate font-medium"> Onyx Storage</span>
                             </div>
