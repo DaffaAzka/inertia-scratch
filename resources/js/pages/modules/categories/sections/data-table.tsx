@@ -51,8 +51,6 @@ export default function DataTable({ categories }: { categories: Category[] }) {
                         <TableBody>
                             {categories.map((category, index) => (
                                 <TableRow key={category.id}>
-                                    {' '}
-                                    {/* ← Tambah key! */}
                                     <TableCell className="font-medium">{index + 1}</TableCell>
                                     <TableCell>{category.name}</TableCell>
                                     <TableCell>

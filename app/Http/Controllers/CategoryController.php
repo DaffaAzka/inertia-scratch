@@ -65,7 +65,13 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $request->validate([
+            "name" => "required|string|unique:categories,name",
+            "description" => "required|string",
+        ]);
+
+        Category::findOrFail($id)->update($request->all());
+        return back();
     }
 
     /**
@@ -73,6 +79,7 @@ class CategoryController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        Category::findOrFail($id)->delete();
+        return back();
     }
 }

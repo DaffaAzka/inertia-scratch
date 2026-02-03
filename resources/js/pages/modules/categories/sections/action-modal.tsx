@@ -1,9 +1,12 @@
+import LoadingButton from '@/components/button_loading';
 import InputForm from '@/components/input_form';
 import TextareaForm from '@/components/textarea_form';
 import { Dialog, DialogContent, DialogDescription, DialogHeader } from '@/components/ui/dialog';
 import { Actions, Category } from '@/lib/types';
+import { router } from '@inertiajs/react';
 import { DialogTitle } from '@radix-ui/react-dialog';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 export default function ActionModal({
     category,
@@ -23,6 +26,7 @@ export default function ActionModal({
 
     const [disabled, setDisabled] = useState(false);
     const [title, setTitle] = useState('');
+    const [loading, setLoading] = useState(false);
 
     useEffect(() => {
         if (category) {
@@ -59,13 +63,62 @@ export default function ActionModal({
         }));
     }
 
+    function handleSubmit(e: any) {
+        e.preventDefault();
+        setLoading(true);
+
+        switch (action) {
+            case Actions.DELETE:
+                router.delete(`/categories/${category.id}`, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    only: ['categories'],
+                    onSuccess: () => {
+                        setValues({
+                            name: '',
+                            description: '',
+                        });
+                        onClose();
+                        toast.success('Category deleted successfully!');
+                    },
+                    onFinish: () => {
+                        setLoading(false);
+                    },
+                });
+                break;
+
+            case Actions.UPDATE:
+                router.patch(`/categories/${category.id}`, values, {
+                    preserveState: true,
+                    preserveScroll: true,
+                    only: ['categories'],
+                    onSuccess: () => {
+                        setValues({
+                            name: '',
+                            description: '',
+                        });
+                        onClose();
+                        toast.success('Category updated successfully!');
+                    },
+                    onFinish: () => {
+                        setLoading(false);
+                    },
+                });
+                break;
+
+            default:
+                setLoading(false);
+                break;
+        }
+    }
+
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
             <DialogContent className="max-w-sm overflow-hidden md:max-w-md lg:max-w-lg">
                 <DialogHeader className="flex flex-col gap-5">
-                    <DialogTitle>{title}</DialogTitle>
+                    <DialogTitle className="text-lg leading-none font-semibold">{title}</DialogTitle>
                     <DialogDescription asChild>
-                        <form className="flex flex-col gap-5 overflow-hidden">
+                        <form className="flex flex-col gap-5 overflow-hidden" onSubmit={handleSubmit}>
                             <InputForm
                                 name="name"
                                 text="Name Category"
@@ -83,6 +136,19 @@ export default function ActionModal({
                                 value={values.description}
                                 isDisabled={disabled}
                             />
+
+                            {action === Actions.UPDATE || action === Actions.DELETE ? (
+                                <>
+                                    <LoadingButton
+                                        text="Submit"
+                                        type="submit"
+                                        variant={action === Actions.DELETE ? 'destructive' : 'default'}
+                                        loading={loading}
+                                    />
+                                </>
+                            ) : (
+                                <></>
+                            )}
                         </form>
                     </DialogDescription>
                 </DialogHeader>
