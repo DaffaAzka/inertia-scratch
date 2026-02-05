@@ -12,10 +12,16 @@ class CategoryController extends Controller
     /**
      * Display a listing of the resource.
      */
-    public function index()
+    public function index(Request $request)
     {
-        $categories = Category::with('user:id,name')->latest()->paginate(10);
-        return Inertia::render("modules/categories/categories", ["categories" => $categories]);
+        $query = Category::with('user')->latest();
+
+        if ($request->has('search') && $request->search) {
+            $query->where('name', 'like', '%' . $request->search . '%')->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+
+        $categories = $query->paginate(10);
+        return Inertia::render("modules/categories/categories", ["categories" => $categories, "filters" => $request->only('search')]);
     }
 
     /**

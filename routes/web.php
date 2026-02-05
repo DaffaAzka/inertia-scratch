@@ -21,13 +21,15 @@ Route::group(['middleware' => ['auth']], function () {
     Route::get('/dashboard', [AuthController::class, 'dashboard'])->name('dashboard');
     Route::get('/logout', [AuthController::class, 'logout']);
 
-    // Category Routes
-
     Route::group(['middleware' => ['role:admin']], function () {
+        // Category Routes
         Route::get('/categories', [CategoryController::class, 'index'])->name('categories');
         Route::post('/categories', [CategoryController::class, 'store']);
         Route::patch('/categories/{id}', [CategoryController::class, 'update']);
         Route::delete('/categories/{id}', [CategoryController::class, 'destroy']);
+
+        // User Routes
+        
     });
 
 });

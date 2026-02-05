@@ -12,6 +12,7 @@ export default function CategoriesPage({ categories }: { categories: PaginatedDa
 
     function handleSearch(e: React.ChangeEvent<HTMLInputElement>) {
         setSearch(e.target.value);
+        router.get('/categories', { search: e.target.value }, { preserveState: true, preserveScroll: true });
     }
 
     function handlePageChange(page: number) {
@@ -28,11 +29,7 @@ export default function CategoriesPage({ categories }: { categories: PaginatedDa
 
                 <DataTable categories={categories.data} />
 
-                <PaginationComponent
-                    currentPage={categories.current_page}
-                    lastPage={categories.last_page}
-                    onPageChange={handlePageChange}
-                />
+                <PaginationComponent currentPage={categories.current_page} lastPage={categories.last_page} onPageChange={handlePageChange} />
             </div>
         </AuthLayout>
     );
