@@ -17,7 +17,7 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
     const [values, setValues] = useState({
         name: '',
         description: '',
-        category_id: 0,
+        category_id: '',
         code: '',
         status: '',
         quantity: 0,
@@ -86,7 +86,7 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
                 setValues({
                     name: '',
                     description: '',
-                    category_id: 0,
+                    category_id: '',
                     code: '',
                     status: '',
                     quantity: 0,
@@ -149,7 +149,7 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
                             handleChange={(value: string) => handleChange({ target: { name: 'category_id', value } } as any)}
                             error={errors.category_id}
                             usePlaceholder={true}
-                            value={values.category_id.toString()}
+                            value={values.category_id}
                             items={categories}
                         />
 

@@ -1,9 +1,10 @@
 import AuthLayout from '@/components/layouts/auth_layout';
 import SelectForm from '@/components/select-form';
 import { Input } from '@/components/ui/input';
-import { Category, Item } from '@/lib/types';
+import { Category, Item, PaginatedData } from '@/lib/types';
+import DataCards from './sections/data-cards';
 
-export default function DahsboardPage({ items, categories }: { items: Item[]; categories: Category[] }) {
+export default function DahsboardPage({ items, categories }: { items: PaginatedData<Item>; categories: Category[] }) {
     return (
         <AuthLayout title="Dashboard">
             <div className="flex flex-col gap-4">
@@ -19,6 +20,8 @@ export default function DahsboardPage({ items, categories }: { items: Item[]; ca
                         />
                     </div>
                 </div>
+
+                <DataCards items={items.data} />
             </div>
         </AuthLayout>
     );

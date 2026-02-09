@@ -20,7 +20,6 @@ export default function ImagePreview({
         if (preview) {
             setImageSrc(preview);
         } else if (existingImage) {
-            // Handle both paths with and without /storage prefix
             const imagePath = existingImage.startsWith('/') ? existingImage : `/storage/${existingImage}`;
             setImageSrc(imagePath);
         } else {
