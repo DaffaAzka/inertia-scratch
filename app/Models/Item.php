@@ -12,7 +12,7 @@ class Item extends Model
         'description',
         'category_id',
         'user_id',
-        'image_url',
+        'image_path',
         'status',
         'quantity',
         'evailable_quantity',
@@ -27,5 +27,13 @@ class Item extends Model
     public function user()
     {
         return $this->belongsTo(User::class);
+    }
+
+    protected function getImagePathAttribute($value)
+    {
+        if ($value && !str_starts_with($value, '/')) {
+            return '/storage/' . $value;
+        }
+        return $value;
     }
 }

@@ -48,6 +48,8 @@ export default function DataTable({ items, categories }: { items: Item[]; catego
                                 <TableHead>Item Code</TableHead>
                                 <TableHead>Item Name</TableHead>
                                 <TableHead>Available Quantity</TableHead>
+                                <TableHead>Quantity</TableHead>
+                                <TableHead>Category</TableHead>
                                 <TableHead className="text-right">Action</TableHead>
                             </TableRow>
                         </TableHeader>
@@ -58,6 +60,8 @@ export default function DataTable({ items, categories }: { items: Item[]; catego
                                     <TableCell className="font-medium">{item.code}</TableCell>
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell>{item.evailable_quantity}</TableCell>
+                                    <TableCell>{item.quantity}</TableCell>
+                                    <TableCell>{item.category?.name ?? 'N/A'}</TableCell>
                                     <TableCell className="flex flex-row justify-end gap-2">
                                         <Button variant="default" size="icon-sm" onClick={() => handleClick(item, categories, true, Actions.UPDATE)}>
                                             <PencilIcon />

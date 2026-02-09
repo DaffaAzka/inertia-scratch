@@ -4,6 +4,7 @@ import { useState } from 'react';
 import { toast } from 'sonner';
 
 import LoadingButton from '@/components/button_loading';
+import InputFileForm from '@/components/input-file-form';
 import InputForm from '@/components/input-form';
 import SelectForm from '@/components/select-form';
 import TextareaForm from '@/components/textarea-form';
@@ -21,9 +22,10 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
         status: '',
         quantity: 0,
         evailable_quantity: 0,
-        image_path: '',
     });
 
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string>('');
     const [loading, setLoading] = useState(false);
     const conditions: SelectItems[] = [
         {
@@ -47,10 +49,36 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
         }));
     }
 
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (file) {
+            setImageFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function handleRemoveImage() {
+        setImageFile(null);
+        setPreview('');
+    }
+
     function handleSubmit(e: any) {
         e.preventDefault();
         setLoading(true);
-        router.post('/items', values, {
+
+        const formData = new FormData();
+        Object.keys(values).forEach((key) => {
+            formData.append(key, String((values as any)[key]));
+        });
+        if (imageFile) {
+            formData.append('image_path', imageFile);
+        }
+
+        router.post('/items', formData, {
             preserveState: true,
             preserveScroll: true,
             only: ['items'],
@@ -63,8 +91,9 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
                     status: '',
                     quantity: 0,
                     evailable_quantity: 0,
-                    image_path: '',
                 });
+                setImageFile(null);
+                setPreview('');
                 toast.success('Item created successfully!');
             },
             onFinish: () => {
@@ -73,7 +102,7 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
             onError: () => {
                 toast.error('Failed to create item. Please check the form for errors.');
                 console.log(errors);
-            }
+            },
         });
     }
 
@@ -146,7 +175,7 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
                             />
                             <InputForm
                                 name="evailable_quantity"
-                                text="Evailable Quantity Item"
+                                text="Available Quantity Item"
                                 type="number"
                                 handleChange={handleChange}
                                 error={errors.evailable_quantity}
@@ -154,6 +183,16 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
                                 value={values.evailable_quantity.toString()}
                             />
                         </div>
+                        <InputFileForm
+                            name="image_path"
+                            text="Upload Image"
+                            handleChange={handleFileChange}
+                            error={errors.image_path}
+                            usePlaceholder={false}
+                            accept="image/*"
+                            preview={preview}
+                            onRemoveImage={handleRemoveImage}
+                        />
                         <LoadingButton text="Submit" type="submit" loading={loading} />
                     </form>
                 </DialogHeader>

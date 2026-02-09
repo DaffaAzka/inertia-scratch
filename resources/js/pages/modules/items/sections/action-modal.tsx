@@ -1,4 +1,5 @@
 import LoadingButton from '@/components/button_loading';
+import InputFileForm from '@/components/input-file-form';
 import InputForm from '@/components/input-form';
 import SelectForm from '@/components/select-form';
 import TextareaForm from '@/components/textarea-form';
@@ -32,9 +33,10 @@ export default function ActionModal({
         status: '',
         quantity: 0,
         evailable_quantity: 0,
-        image_path: '',
     });
 
+    const [imageFile, setImageFile] = useState<File | null>(null);
+    const [preview, setPreview] = useState<string>('');
     const [disabled, setDisabled] = useState(false);
     const [title, setTitle] = useState('');
     const [loading, setLoading] = useState(false);
@@ -64,8 +66,9 @@ export default function ActionModal({
                 status: item.status,
                 quantity: item.quantity,
                 evailable_quantity: item.evailable_quantity,
-                image_path: item.image_path ?? '',
             });
+            setPreview(item.image_path ?? '');
+            setImageFile(null);
         }
     }, [item.id]);
 
@@ -94,6 +97,23 @@ export default function ActionModal({
         }));
     }
 
+    function handleFileChange(e: React.ChangeEvent<HTMLInputElement>) {
+        const file = e.target.files?.[0];
+        if (file) {
+            setImageFile(file);
+            const reader = new FileReader();
+            reader.onloadend = () => {
+                setPreview(reader.result as string);
+            };
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function handleRemoveImage() {
+        setImageFile(null);
+        setPreview(item.image_path ?? '');
+    }
+
     function handleSubmit(e: any) {
         e.preventDefault();
         setLoading(true);
@@ -113,8 +133,9 @@ export default function ActionModal({
                             status: '',
                             quantity: 0,
                             evailable_quantity: 0,
-                            image_path: '',
                         });
+                        setImageFile(null);
+                        setPreview('');
                         onClose();
                         toast.success('Item deleted successfully!');
                     },
@@ -125,7 +146,15 @@ export default function ActionModal({
                 break;
 
             case Actions.UPDATE:
-                router.patch(`/items/${item.id}`, values, {
+                const formData = new FormData();
+                Object.keys(values).forEach((key) => {
+                    formData.append(key, String((values as any)[key]));
+                });
+                if (imageFile) {
+                    formData.append('image_path', imageFile);
+                }
+
+                router.patch(`/items/${item.id}`, formData, {
                     preserveState: true,
                     preserveScroll: true,
                     only: ['items'],
@@ -138,8 +167,9 @@ export default function ActionModal({
                             status: '',
                             quantity: 0,
                             evailable_quantity: 0,
-                            image_path: '',
                         });
+                        setImageFile(null);
+                        setPreview('');
                         onClose();
                         toast.success('Item updated successfully!');
                     },
@@ -157,7 +187,7 @@ export default function ActionModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-sm overflow-hidden md:max-w-md lg:max-w-lg">
+            <DialogContent className="max-w-sx max-h-[90vh] overflow-x-hidden overflow-y-scroll md:max-w-md lg:max-w-lg">
                 <DialogHeader className="flex flex-col gap-5">
                     <DialogTitle className="text-lg leading-none font-semibold">{title}</DialogTitle>
                     <form className="flex flex-col gap-5 overflow-hidden" onSubmit={handleSubmit}>
@@ -227,7 +257,7 @@ export default function ActionModal({
                             />
                             <InputForm
                                 name="evailable_quantity"
-                                text="Evailable Quantity Item"
+                                text="Available Quantity Item"
                                 type="number"
                                 handleChange={handleChange}
                                 error={errors.evailable_quantity}
@@ -236,6 +266,19 @@ export default function ActionModal({
                                 isDisabled={disabled}
                             />
                         </div>
+
+                        <InputFileForm
+                            name="image_path"
+                            text="Upload Image"
+                            handleChange={handleFileChange}
+                            error={errors.image_path}
+                            usePlaceholder={false}
+                            isDisabled={disabled}
+                            accept="image/*"
+                            preview={preview}
+                            existingImage={!imageFile ? item.image_path ?? undefined : undefined}
+                            onRemoveImage={handleRemoveImage}
+                        />
 
                         {(action === Actions.UPDATE || action === Actions.DELETE) && (
                             <LoadingButton

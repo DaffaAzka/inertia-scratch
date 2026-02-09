@@ -50,16 +50,24 @@ class ItemController extends Controller
             'name' => 'required|string|unique:items,name',
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'image_url' => 'nullable|url',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|string',
             'quantity' => 'required|integer|min:0',
             'evailable_quantity' => 'required|integer|min:0|lte:quantity',
             'code' => 'required|string|unique:items,code',
         ]);
 
+        $data = $request->all();
         $request['user_id'] = Auth::user()->id;
+        $data['user_id'] = Auth::user()->id;
 
-        Item::create($request->all());
+        if ($request->hasFile('image_path')) {
+            $file = $request->file('image_path');
+            $path = $file->store('items', 'public');
+            $data['image_path'] = $path;
+        }
+
+        Item::create($data);
         return back();
     }
 
@@ -89,15 +97,27 @@ class ItemController extends Controller
             'name' => 'required|string|unique:items,name,' . $id,
             'description' => 'required|string',
             'category_id' => 'required|exists:categories,id',
-            'image_url' => 'nullable|url',
+            'image_path' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048',
             'status' => 'required|string',
             'quantity' => 'required|integer|min:0',
-            'evailable_quantity' => 'required|integer|min:0||lte:quantity',
-            'code' => 'required|string| unique:items,code,' . $id,
+            'evailable_quantity' => 'required|integer|min:0|lte:quantity',
+            'code' => 'required|string|unique:items,code,' . $id,
         ]);
 
-        $request['user_id'] = Auth::user()->id;
-        Item::where('id', $id)->update($request->all());
+        $data = $request->all();
+        $data['user_id'] = Auth::user()->id;
+
+        if ($request->hasFile('image_path')) {
+            $item = Item::find($id);
+            if ($item->image_path) {
+                \Storage::disk('public')->delete($item->image_path);
+            }
+            $file = $request->file('image_path');
+            $path = $file->store('items', 'public');
+            $data['image_path'] = $path;
+        }
+
+        Item::where('id', $id)->update($data);
         return back();
     }
 
@@ -107,6 +127,10 @@ class ItemController extends Controller
     public function destroy(string $id)
     {
         //
+        $item = Item::find($id);
+        if ($item && $item->image_path) {
+            \Storage::disk('public')->delete($item->image_path);
+        }
         Item::where('id', $id)->delete();
         return back();
     }
