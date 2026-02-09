@@ -1,24 +1,28 @@
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { Actions, Item } from '@/lib/types';
+import { Actions, Item, SelectItems } from '@/lib/types';
 import { InfoIcon, PencilIcon, TrashIcon } from 'lucide-react';
 import { useState } from 'react';
+import ActionModal from './action-modal';
 
-export default function DataTable({ items }: { items: Item[] }) {
+export default function DataTable({ items, categories }: { items: Item[]; categories: SelectItems[] }) {
     const [actionModal, setActionModal] = useState<{
         item: Item | null;
+        categories: SelectItems[];
         isOpen: boolean;
         action: Actions | null;
     }>({
         item: null,
+        categories: [],
         isOpen: false,
         action: null,
     });
 
-    function handleClick(item: Item, isOpen: boolean, action: Actions) {
+    function handleClick(item: Item, categories: SelectItems[], isOpen: boolean, action: Actions) {
         setActionModal({
             item: item,
+            categories: categories,
             isOpen: isOpen,
             action: action,
         });
@@ -27,6 +31,7 @@ export default function DataTable({ items }: { items: Item[] }) {
     function handleCloseModal() {
         setActionModal({
             item: null,
+            categories: [],
             isOpen: false,
             action: null,
         });
@@ -54,13 +59,17 @@ export default function DataTable({ items }: { items: Item[] }) {
                                     <TableCell>{item.name}</TableCell>
                                     <TableCell>{item.evailable_quantity}</TableCell>
                                     <TableCell className="flex flex-row justify-end gap-2">
-                                        <Button variant="default" size="icon-sm" onClick={() => handleClick(item, true, Actions.UPDATE)}>
+                                        <Button variant="default" size="icon-sm" onClick={() => handleClick(item, categories, true, Actions.UPDATE)}>
                                             <PencilIcon />
                                         </Button>
-                                        <Button variant="outline" size="icon-sm" onClick={() => handleClick(item, true, Actions.DETAIL)}>
+                                        <Button variant="outline" size="icon-sm" onClick={() => handleClick(item, categories, true, Actions.DETAIL)}>
                                             <InfoIcon />
                                         </Button>
-                                        <Button variant="destructive" size="icon-sm" onClick={() => handleClick(item, true, Actions.DELETE)}>
+                                        <Button
+                                            variant="destructive"
+                                            size="icon-sm"
+                                            onClick={() => handleClick(item, categories, true, Actions.DELETE)}
+                                        >
                                             <TrashIcon />
                                         </Button>
                                     </TableCell>
@@ -70,6 +79,18 @@ export default function DataTable({ items }: { items: Item[] }) {
                     </Table>
                 </CardContent>
             </Card>
+
+            {actionModal.item && actionModal.isOpen && actionModal.action ? (
+                <ActionModal
+                    item={actionModal.item}
+                    categories={actionModal.categories}
+                    action={actionModal.action}
+                    isOpen={actionModal.isOpen}
+                    onClose={handleCloseModal}
+                />
+            ) : (
+                <></>
+            )}
         </>
     );
 }

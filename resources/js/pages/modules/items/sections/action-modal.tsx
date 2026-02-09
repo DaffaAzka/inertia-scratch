@@ -199,6 +199,7 @@ export default function ActionModal({
                             error={errors.category_id}
                             usePlaceholder={true}
                             isDisabled={disabled}
+                            value={values.category_id.toString()}
                             items={categories}
                         />
 
@@ -208,6 +209,8 @@ export default function ActionModal({
                             handleChange={(value: string) => handleChange({ target: { name: 'status', value } } as any)}
                             error={errors.status}
                             usePlaceholder={true}
+                            value={values.status}
+                            isDisabled={disabled}
                             items={conditions}
                         />
 

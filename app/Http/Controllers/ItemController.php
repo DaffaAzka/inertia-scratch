@@ -53,7 +53,7 @@ class ItemController extends Controller
             'image_url' => 'nullable|url',
             'status' => 'required|string',
             'quantity' => 'required|integer|min:0',
-            'evailable_quantity' => 'required|integer|min:0',
+            'evailable_quantity' => 'required|integer|min:0|lte:quantity',
             'code' => 'required|string|unique:items,code',
         ]);
 
@@ -85,6 +85,20 @@ class ItemController extends Controller
     public function update(Request $request, string $id)
     {
         //
+        $request->validate([
+            'name' => 'required|string|unique:items,name,' . $id,
+            'description' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'image_url' => 'nullable|url',
+            'status' => 'required|string',
+            'quantity' => 'required|integer|min:0',
+            'evailable_quantity' => 'required|integer|min:0||lte:quantity',
+            'code' => 'required|string| unique:items,code,' . $id,
+        ]);
+
+        $request['user_id'] = Auth::user()->id;
+        Item::where('id', $id)->update($request->all());
+        return back();
     }
 
     /**
@@ -93,5 +107,7 @@ class ItemController extends Controller
     public function destroy(string $id)
     {
         //
+        Item::where('id', $id)->delete();
+        return back();
     }
 }

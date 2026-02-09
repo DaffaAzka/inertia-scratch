@@ -27,7 +27,7 @@ export default function ItemsPage({ items, categories }: { items: PaginatedData<
                     <CreateModal categories={categories} />
                 </div>
 
-                <DataTable items={items.data} />
+                <DataTable items={items.data} categories={categories} />
 
                 <PaginationComponent currentPage={items.current_page} lastPage={items.last_page} onPageChange={handlePageChange} />
             </div>

@@ -9,6 +9,7 @@ export default function SelectForm({
     items,
     error = null,
     usePlaceholder = false,
+    value = null,
     isDisabled = false,
 }: {
     name: string;
@@ -16,13 +17,14 @@ export default function SelectForm({
     handleChange: (value: string) => void;
     items: SelectItems[];
     error?: string | null;
+    value?: string | null;
     usePlaceholder?: boolean;
     isDisabled?: boolean;
 }) {
     return usePlaceholder ? (
         <Field aria-invalid={error != null} className="flex flex-col gap-3">
             <div className="flex flex-col gap-1">
-                <Select onValueChange={handleChange} name={name}>
+                <Select onValueChange={handleChange} name={name} value={value ?? ''}>
                     <SelectTrigger className="w-full" disabled={isDisabled}>
                         <SelectValue placeholder={text} />
                     </SelectTrigger>
@@ -40,7 +42,7 @@ export default function SelectForm({
     ) : (
         <Field aria-invalid={error != null} className="flex flex-col gap-3">
             <FieldLabel htmlFor={name}>{text}</FieldLabel>
-            <Select onValueChange={handleChange} name={name}>
+            <Select onValueChange={handleChange} name={name} value={value ?? ''}>
                 <SelectTrigger className="w-full" disabled={isDisabled}>
                     <SelectValue placeholder={text} />
                 </SelectTrigger>
