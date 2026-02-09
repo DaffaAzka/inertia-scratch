@@ -15,6 +15,20 @@ export default function DataCards({ items }: { items: Item[] }) {
                             alt="Event cover"
                             className="relative z-20 aspect-video w-full rounded-tl-xl rounded-tr-xl object-cover brightness-80 dark:brightness-80"
                         />
+                        <div className="mx-6 grid grid-cols-2 items-center justify-between gap-4">
+                            <div className="rounded-md bg-green-200 py-2 text-center">
+                                <div className="flex flex-col">
+                                    <p className="text-xs font-bold">Total</p>
+                                    <p className="text-xs font-semibold">{item.quantity}</p>
+                                </div>
+                            </div>
+                            <div className="rounded-md bg-yellow-200 py-2 text-center">
+                                <div className="flex flex-col">
+                                    <p className="text-xs font-bold">Available</p>
+                                    <p className="text-xs font-semibold">{item.evailable_quantity}</p>
+                                </div>
+                            </div>
+                        </div>
                         <CardHeader className="flex-1">
                             <CardAction>
                                 <Badge variant="secondary">{item.category?.name}</Badge>
@@ -23,7 +37,7 @@ export default function DataCards({ items }: { items: Item[] }) {
                             <CardDescription className="line-clamp-2">{item.description}</CardDescription>
                         </CardHeader>
                         <CardFooter className="mt-auto">
-                            <Button className="w-full">Borrow Item</Button>
+                            <Button className="w-full" disabled={item.evailable_quantity === 0}>Borrow Item</Button>
                         </CardFooter>
                     </Card>
                 ))}
