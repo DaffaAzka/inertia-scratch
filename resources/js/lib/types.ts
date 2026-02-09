@@ -53,3 +53,25 @@ export enum Actions {
     DETAIL = 'DETAIL',
     DELETE = 'DELETE',
 }
+
+export enum ItemStatuses {
+    GOOD = 'good',
+    FAIR = 'fair',
+    DAMAGED = 'damaged',
+}
+
+export type BorrowingStatus = 'pending' | 'approved' | 'rejected' | 'borrowed' | 'returned' | 'late';
+
+export type Borrowing = {
+    id: number;
+    borrower_id: number;
+    item_id: number;
+    quantity: number;
+    borrow_date: string;
+    planned_return_date: string;
+    actual_return_date: string | null;
+    status: BorrowingStatus;
+    notes: string | null;
+    approved_by: number | null;
+    approved_at: string | null;
+};

@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Category;
+use App\Models\Item;
 use App\Models\User;
 use Auth;
 use Illuminate\Http\Request;
@@ -65,9 +67,23 @@ class AuthController extends Controller
         return redirect()->route("login");
     }
 
-    function dashboard()
+    function dashboard(Request $request)
     {
-        return Inertia::render("modules/dashboard");
+        $query = Item::with(['category', 'user'])->latest();
+
+        if ($request->has('search') && $request->search) {
+            $query = $query->where('name', 'like', '%' . $request->search . '%')->orWhere('code', 'like', '%' . $request->search . '%')->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+
+        $items = $query->paginate(10);
+
+        $categories = Category::all();
+
+        return inertia('modules/dashboard/dashboard', [
+            'items' => $items,
+            'filters' => $request->only(['search']),
+            'categories' => $categories
+        ]);
     }
 
 }

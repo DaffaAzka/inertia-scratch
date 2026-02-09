@@ -37,7 +37,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 items: [
                     {
                         title: 'Manage Borrowings',
-                        url: '#',
+                        url: '/borrowings',
                         isActive: true,
                         isShow: true,
                     },

@@ -9,7 +9,7 @@ import {
     SidebarMenuButton,
     SidebarMenuItem,
     SidebarMenuSub,
-    SidebarMenuSubButton,   
+    SidebarMenuSubButton,
     SidebarMenuSubItem,
 } from '@/components/ui/sidebar';
 
@@ -40,7 +40,7 @@ export function NavMain({
                     return (
                         <Collapsible key={item.title} asChild defaultOpen={item.isActive}>
                             <SidebarMenuItem>
-                                <SidebarMenuButton asChild tooltip={item.title}>
+                                <SidebarMenuButton asChild tooltip={item.title} isActive={item.url === window.location.pathname}>
                                     <a href={item.url}>
                                         <item.icon />
                                         <span>{item.title}</span>
@@ -60,7 +60,7 @@ export function NavMain({
                                                     if (!subItem.isShow) return null;
                                                     return (
                                                         <SidebarMenuSubItem key={subItem.title}>
-                                                            <SidebarMenuSubButton asChild>
+                                                            <SidebarMenuSubButton asChild isActive={subItem.url === window.location.pathname}>
                                                                 <a href={subItem.url}>
                                                                     <span>{subItem.title}</span>
                                                                 </a>

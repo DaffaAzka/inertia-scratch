@@ -1,8 +1,10 @@
 <?php
 
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
+use App\Models\Borrowing;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -35,7 +37,9 @@ Route::group(['middleware' => ['auth']], function () {
         Route::patch('/items/{id}', [ItemController::class, 'update']);
         Route::delete('/items/{id}', [ItemController::class, 'destroy']);
 
-        // User Routes
+        // Borrowings Routes
+        Route::get('/borrowings', [BorrowingController::class, 'index'])->name('borrowings');
+
     });
 
 });
