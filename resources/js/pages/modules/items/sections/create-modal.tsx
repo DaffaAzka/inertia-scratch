@@ -109,7 +109,7 @@ export default function CreateModal({ categories }: { categories: SelectItems[] 
     return (
         <Dialog>
             <DialogTrigger asChild>
-                <Button>Create Category</Button>
+                <Button>Create Item</Button>
             </DialogTrigger>
             <DialogContent className="max-w-sm overflow-hidden md:max-w-md lg:max-w-lg">
                 <DialogHeader className="flex flex-col gap-5">

@@ -74,4 +74,7 @@ export type Borrowing = {
     notes: string | null;
     approved_by: number | null;
     approved_at: string | null;
+
+    item?: Item;
+    borrower?: User;
 };

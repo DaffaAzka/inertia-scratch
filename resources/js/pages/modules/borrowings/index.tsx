@@ -1,10 +1,10 @@
 import AuthLayout from '@/components/layouts/auth_layout';
-import { Category, Item } from '@/lib/types';
+import { Borrowing, Category, Item, PaginatedData } from '@/lib/types';
 
-export default function IndexPage({ items, categories }: { items: Item[]; categories: Category[] }) {
+export default function IndexPage({ borrowings }: { borrowings: PaginatedData<Borrowing> }) {
     return (
         <AuthLayout title="Borrowings">
-            <h1>Borrowings</h1>
+            <h1>{borrowings.data.toString()} Borrowings</h1>
         </AuthLayout>
     );
 }

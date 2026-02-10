@@ -2,9 +2,26 @@ import { Item } from '@/lib/types';
 
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
-import { Card, CardAction, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { Card, CardAction, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from '@/components/ui/card';
+import { useState } from 'react';
+import BorrowModal from './borrow-modal';
 
 export default function DataCards({ items }: { items: Item[] }) {
+    const [borrowModal, setBorrowModal] = useState<{
+        item: Item | null;
+        isOpen: boolean;
+    }>({
+        item: null,
+        isOpen: false,
+    });
+
+    function handleClick(item: Item, isOpen: boolean) {
+        setBorrowModal({
+            item: item,
+            isOpen: isOpen,
+        });
+    }
+
     return (
         <>
             <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4">
@@ -29,19 +46,31 @@ export default function DataCards({ items }: { items: Item[] }) {
                                 </div>
                             </div>
                         </div>
-                        <CardHeader className="flex-1">
-                            <CardAction>
-                                <Badge variant="secondary">{item.category?.name}</Badge>
-                            </CardAction>
-                            <CardTitle>{item.name}</CardTitle>
-                            <CardDescription className="line-clamp-2">{item.description}</CardDescription>
-                        </CardHeader>
+
+                        <div className="">
+                            <CardHeader className="flex items-center justify-between pb-3">
+                                <CardTitle className="text-lg">{item.name}</CardTitle>
+                                <CardAction>
+                                    <Badge variant="secondary">{item.category?.name}</Badge>
+                                </CardAction>
+                            </CardHeader>
+
+                            <CardContent className="pt-0">
+                                <CardDescription className="line-clamp-2">{item.description}</CardDescription>
+                            </CardContent>
+                        </div>
                         <CardFooter className="mt-auto">
-                            <Button className="w-full" disabled={item.evailable_quantity === 0}>Borrow Item</Button>
+                            <Button className="w-full" disabled={item.evailable_quantity === 0} onClick={() => handleClick(item, true)}>
+                                Borrow Item
+                            </Button>
                         </CardFooter>
                     </Card>
                 ))}
             </div>
+
+            {borrowModal.item && (
+                <BorrowModal item={borrowModal.item} isOpen={borrowModal.isOpen} onClose={() => handleClick(borrowModal.item!, false)} />
+            )}
         </>
     );
 }

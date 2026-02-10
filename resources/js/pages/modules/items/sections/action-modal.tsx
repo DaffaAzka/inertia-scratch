@@ -207,7 +207,7 @@ export default function ActionModal({
 
     return (
         <Dialog open={isOpen} onOpenChange={onClose}>
-            <DialogContent className="max-w-sx max-h-[90vh] overflow-x-hidden overflow-y-scroll md:max-w-md lg:max-w-lg">
+            <DialogContent className="max-w-sx max-h-[90vh] overflow-x-hidden md:max-w-md lg:max-w-lg">
                 <DialogHeader className="flex flex-col gap-5">
                     <DialogTitle className="text-lg leading-none font-semibold">{title}</DialogTitle>
                     <form className="flex flex-col gap-5 overflow-hidden" onSubmit={handleSubmit}>

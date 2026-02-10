@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Borrowing;
 use App\Models\Category;
 use App\Models\Item;
+use DB;
 use Illuminate\Http\Request;
 
 class BorrowingController extends Controller
@@ -15,20 +16,20 @@ class BorrowingController extends Controller
     public function index(Request $request)
     {
 
-        $query = Item::with(['category', 'user'])->latest();
+        $query = Borrowing::with(['item', 'borrower'])->latest();
 
-        if ($request->has('search') && $request->search) {
-            $query = $query->where('name', 'like', '%' . $request->search . '%')->orWhere('code', 'like', '%' . $request->search . '%')->orWhere('description', 'like', '%' . $request->search . '%');
-        }
+        // if ($request->has('search') && $request->search) {
+        //     $query = $query->where('name', 'like', '%' . $request->search . '%')->orWhere('code', 'like', '%' . $request->search . '%')->orWhere('description', 'like', '%' . $request->search . '%');
+        // }
 
-        $items = $query->paginate(10);
+        $borrowings = $query->paginate(10);
 
-        $categories = Category::all();
+        // $categories = Category::all();
 
         return inertia('modules/borrowings/index', [
-            'items' => $items,
+            'borrowings' => $borrowings,
             'filters' => $request->only(['search']),
-            'categories' => $categories
+            // 'categories' => $categories
         ]);
     }
 
@@ -46,6 +47,29 @@ class BorrowingController extends Controller
     public function store(Request $request)
     {
         //
+        $request->validate([
+            'item_id' => 'required|exists:items,id',
+            'quantity' => 'required|integer|min:1',
+            'planned_return_date' => 'required|date|after:today',
+            'notes' => 'nullable|string',
+            'borrow_date' => 'required|date',
+        ]);
+
+        DB::transaction(function () use ($request) {
+            Borrowing::create(attributes: [
+                'borrower_id' => auth()->id(),
+                'item_id' => $request->item_id,
+                'quantity' => $request->quantity,
+                'borrow_date' => $request->borrow_date,
+                'planned_return_date' => $request->planned_return_date,
+                'notes' => $request->notes,
+                'status' => 'pending',
+            ]);
+
+            Item::where('id', $request->item_id)->decrement('evailable_quantity', $request->quantity);
+        });
+
+        return back();
     }
 
     /**
