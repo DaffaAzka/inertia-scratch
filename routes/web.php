@@ -44,5 +44,6 @@ Route::group(['middleware' => ['auth']], function () {
     // Borrowings Routes
     Route::get('/borrowings', [BorrowingController::class, 'index'])->name('borrowings');
     Route::post('/borrowings', [BorrowingController::class, 'store']);
+    Route::patch('/borrowings/{id}/update-status', [BorrowingController::class, 'updateStatus']);
 
 });

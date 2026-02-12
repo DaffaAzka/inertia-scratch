@@ -1,12 +1,21 @@
 import SelectForm from '@/components/select-form';
+import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from '@/components/ui/table';
-import { authorizations, formatDate } from '@/lib/helpers';
+import { authorizations, formatDate, getStatusLabel } from '@/lib/helpers';
 import { Borrowing, SelectItems } from '@/lib/types';
 import { BrushCleaning, InfoIcon } from 'lucide-react';
 import { useState } from 'react';
 import StatusModal from './status-modal';
+
+const statusConfig: Record<string, { color: string; bgColor: string }> = {
+    pending: { color: 'bg-yellow-100 text-yellow-800', bgColor: 'bg-yellow-50' },
+    approved: { color: 'bg-blue-100 text-blue-800', bgColor: 'bg-blue-50' },
+    rejected: { color: 'bg-red-100 text-red-800', bgColor: 'bg-red-50' },
+    borrowed: { color: 'bg-purple-100 text-purple-800', bgColor: 'bg-purple-50' },
+    returned: { color: 'bg-green-100 text-green-800', bgColor: 'bg-green-50' },
+};
 
 export default function DataTable({ borrowings, userRole }: { borrowings: Borrowing[]; userRole: string }) {
     const [statusModal, setStatusModal] = useState<{
@@ -46,24 +55,38 @@ export default function DataTable({ borrowings, userRole }: { borrowings: Borrow
                 ];
 
             case 'rejected':
+                return [
+                    { id: 'rejected', name: 'Rejected' },
+                    { id: 'pending', name: 'Pending' },
+                ];
             case 'borrowed':
             default:
-                return [{ id: currentStatus, name: currentStatus.charAt(0).toUpperCase() + currentStatus.slice(1) }];
+                return [{ id: currentStatus, name: getStatusLabel(currentStatus) }];
         }
     }
 
     function isStatusDisabled(currentStatus: string): boolean {
         const isAdminOrOfficer = authorizations(userRole, ['admin', 'officer']);
 
-        if (!isAdminOrOfficer && currentStatus == 'approved') {
+        if ((!isAdminOrOfficer && currentStatus == 'approved') || currentStatus == 'rejected') {
             return false;
+        }
+
+        if (currentStatus == 'borrowed') {
+            return true;
         }
 
         return !isAdminOrOfficer;
     }
 
     function handleChange(borrowing: Borrowing, value: string) {
-        if (value !== 'pending') {
+        if (value == 'pending' && borrowing.status == 'rejected') {
+            setStatusModal({
+                borrowing: borrowing,
+                isOpen: true,
+                status: value,
+            });
+        } else if (value !== 'pending') {
             setStatusModal({
                 borrowing: borrowing,
                 isOpen: true,
@@ -94,7 +117,7 @@ export default function DataTable({ borrowings, userRole }: { borrowings: Borrow
                                     <TableHead>Borrowed By</TableHead>
                                     <TableHead>Borrow Date</TableHead>
                                     <TableHead className="hidden lg:table-cell">Planned Return Date</TableHead>
-                                    <TableHead>Status</TableHead>
+                                    <TableHead className="w-8">Status</TableHead>
                                     <TableHead className="text-right">Action</TableHead>
                                 </TableRow>
                             </TableHeader>
@@ -116,17 +139,23 @@ export default function DataTable({ borrowings, userRole }: { borrowings: Borrow
                                         <TableCell>{formatDate(borrowing.borrow_date) ?? 'N/A'}</TableCell>
                                         <TableCell className="hidden lg:table-cell">{formatDate(borrowing.planned_return_date) ?? 'N/A'}</TableCell>
                                         <TableCell>
-                                            <SelectForm
-                                                items={getStatusOptions(borrowing.status)}
-                                                handleChange={(value) => {
-                                                    handleChange(borrowing, value);
-                                                }}
-                                                name="status"
-                                                text="Select Status"
-                                                value={borrowing.status}
-                                                usePlaceholder={true}
-                                                isDisabled={isStatusDisabled(borrowing.status)}
-                                            />
+                                            {isStatusDisabled(borrowing.status) ? (
+                                                <Badge className={`w-full ${statusConfig[borrowing.status || 'fair']?.color}`}>
+                                                    {getStatusLabel(borrowing.status)}
+                                                </Badge>
+                                            ) : (
+                                                <SelectForm
+                                                    items={getStatusOptions(borrowing.status)}
+                                                    handleChange={(value) => {
+                                                        handleChange(borrowing, value);
+                                                    }}
+                                                    name="status"
+                                                    text="Select Status"
+                                                    value={borrowing.status}
+                                                    usePlaceholder={true}
+                                                    isDisabled={isStatusDisabled(borrowing.status)}
+                                                />
+                                            )}
                                         </TableCell>
                                         <TableCell className="flex flex-row justify-end gap-2">
                                             <Button variant="default" size="icon-sm">

@@ -17,3 +17,10 @@ export function formatDate(dateString: string): string {
 
     return `${day} ${month} ${year}`;
 }
+
+
+export function getStatusLabel(statusKey: string): string {
+    return statusKey.charAt(0).toUpperCase() + statusKey.slice(1);
+};
+
+

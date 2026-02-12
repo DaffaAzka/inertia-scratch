@@ -105,4 +105,13 @@ class BorrowingController extends Controller
     {
         //
     }
+
+    public function updateStatus(string $id, Request $request)
+    {
+        Borrowing::findOrFail($id)->update([
+            'status' => $request['status']
+        ]);
+
+        return back();
+    }
 }

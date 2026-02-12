@@ -1,9 +1,13 @@
+import LoadingButton from '@/components/button_loading';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { formatDate, getStatusLabel } from '@/lib/helpers';
 import { Borrowing } from '@/lib/types';
-import { ArrowRight, FileText, Package, User } from 'lucide-react';
+import { router } from '@inertiajs/react';
+import { ArrowRight, Calendar, FileText, User } from 'lucide-react';
 import { useEffect, useState } from 'react';
+import { toast } from 'sonner';
 
 const statusConfig: Record<string, { color: string; bgColor: string }> = {
     pending: { color: 'bg-yellow-100 text-yellow-800', bgColor: 'bg-yellow-50' },
@@ -24,12 +28,16 @@ export default function StatusModal({
     status: String;
     onClose: () => void;
 }) {
+    const [loading, setLoading] = useState(false);
+
     const [value, setValue] = useState<{
         borrowing: Borrowing | null;
+        borrowing_id: String;
         status_from: String;
         status_to: String;
     }>({
         borrowing: null,
+        borrowing_id: '',
         status_from: '',
         status_to: '',
     });
@@ -38,26 +46,48 @@ export default function StatusModal({
         if (borrowing) {
             setValue({
                 borrowing: borrowing,
+                borrowing_id: borrowing.id.toString(),
                 status_from: borrowing.status,
                 status_to: status,
             });
         }
     }, [status, borrowing]);
 
-    const getStatusLabel = (statusKey: string) => {
-        return statusKey.charAt(0).toUpperCase() + statusKey.slice(1);
-    };
+    function handleSubmit(e: React.FormEvent) {
+        e.preventDefault();
+        setLoading(true);
+
+        router.patch(
+            `/borrowings/${value.borrowing_id}/update-status`,
+            {
+                status: value.status_to.toString(),
+            },
+            {
+                preserveState: true,
+                preserveScroll: true,
+                only: ['borrowings'],
+                onFinish: () => setLoading(false),
+                onSuccess: () => {
+                    toast.success('Successfully to update status');
+                    onClose();
+                },
+                onError: () => {
+                    toast.success('Error to update status');
+                },
+            },
+        );
+    }
 
     return (
         <>
             <Dialog open={isOpen} onOpenChange={onClose}>
-                <DialogContent className="max-w-sx max-h-[90vh] overflow-x-hidden md:max-w-md lg:max-w-xl xl:max-w-2xl">
+                <DialogContent className="max-w-sx max-h-[90vh] overflow-x-hidden md:max-w-md lg:max-w-xl xl:max-w-3xl">
                     <DialogHeader>
                         <DialogTitle className="text-lg">Confirm Status Change</DialogTitle>
                         <DialogDescription className="text-sm">Please review the details before changing the status</DialogDescription>
                     </DialogHeader>
 
-                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
+                    <form className="grid grid-cols-1 gap-6 md:grid-cols-2" onSubmit={handleSubmit}>
                         <div className="space-y-4">
                             <h3 className="text-sm font-semibold text-gray-900">Item Details</h3>
                             <div className="space-y-3 rounded-lg bg-gray-50 p-4">
@@ -75,15 +105,11 @@ export default function StatusModal({
                                     <p className="mt-1 text-sm text-gray-700">{value.borrowing?.item?.category?.name ?? 'N/A'}</p>
                                 </div>
 
-                                <div className="flex items-center gap-2">
-                                    <Package className="h-4 w-4 text-gray-400" />
-                                    <div>
-                                        <p className="text-xs font-medium text-gray-500">Item Code</p>
-                                        <p className="text-sm text-gray-700">{value.borrowing?.item?.code ?? 'N/A'}</p>
-                                    </div>
+                                <div>
+                                    <p className="text-xs font-medium text-gray-500">Item Code</p>
+                                    <p className="text-sm text-gray-700">{value.borrowing?.item?.code ?? 'N/A'}</p>
                                 </div>
 
-                                {/* Item Status */}
                                 <div>
                                     <p className="text-xs font-medium text-gray-500">Item Condition</p>
                                     <div className="mt-1">
@@ -93,15 +119,13 @@ export default function StatusModal({
                                     </div>
                                 </div>
 
-                                {/* Quantity */}
                                 <div>
                                     <p className="text-xs font-medium text-gray-500">Quantity Borrowed</p>
-                                    <p className="mt-1 text-sm font-semibold text-gray-900">{value.borrowing?.quantity ?? 0} unit(s)</p>
+                                    <p className="mt-1 text-sm font-semibold text-gray-900">{value.borrowing?.quantity ?? 0} item(s)</p>
                                 </div>
                             </div>
                         </div>
 
-                        {/* Right Column - Borrowing Status Information */}
                         <div className="space-y-4">
                             <h3 className="text-sm font-semibold text-gray-900">Borrowing Details</h3>
                             <div className="space-y-3 rounded-lg bg-gray-50 p-4">
@@ -114,11 +138,13 @@ export default function StatusModal({
                                     </div>
                                 </div>
 
-                                {/* <div className="flex items-center gap-2">
+                                <div className="flex items-center gap-2">
                                     <Calendar className="h-4 w-4 text-gray-400" />
                                     <div className="flex-1">
                                         <p className="text-xs font-medium text-gray-500">Borrow Date</p>
-                                        <p className="text-sm text-gray-700">{formatDate(value.borrowing?.borrow_date ?? '') ?? 'N/A'}</p>
+                                        <p className="text-sm text-gray-700">
+                                            {value.borrowing?.borrow_date ? formatDate(value.borrowing?.borrow_date) : 'N/A'}
+                                        </p>
                                     </div>
                                 </div>
 
@@ -126,11 +152,12 @@ export default function StatusModal({
                                     <Calendar className="h-4 w-4 text-gray-400" />
                                     <div className="flex-1">
                                         <p className="text-xs font-medium text-gray-500">Planned Return</p>
-                                        <p className="text-sm text-gray-700">{formatDate(value.borrowing?.planned_return_date ?? '') ?? 'N/A'}</p>
+                                        <p className="text-sm text-gray-700">
+                                            {value.borrowing?.planned_return_date ? formatDate(value.borrowing?.planned_return_date) : 'N/A'}
+                                        </p>
                                     </div>
-                                </div> */}
+                                </div>
 
-                                {/* Status Transition */}
                                 <div className="rounded-md bg-white p-3">
                                     <p className="mb-2 text-xs font-medium text-gray-500">Status Change</p>
                                     <div className="flex items-center justify-between">
@@ -144,10 +171,9 @@ export default function StatusModal({
                                     </div>
                                 </div>
 
-                                {/* Notes */}
                                 {value.borrowing?.notes && (
                                     <div className="flex gap-2 rounded-md bg-blue-50 p-3">
-                                        <FileText className="h-4 w-4 flex-shrink-0 text-blue-600" />
+                                        <FileText className="h-4 w-4 shrink-0 text-blue-600" />
                                         <div className="flex-1">
                                             <p className="text-xs font-medium text-gray-500">Notes</p>
                                             <p className="mt-1 text-sm text-gray-700">{value.borrowing.notes}</p>
@@ -156,15 +182,16 @@ export default function StatusModal({
                                 )}
                             </div>
 
-                            {/* Action Buttons */}
                             <div className="flex gap-2 pt-2">
                                 <Button variant="outline" onClick={onClose} className="flex-1">
                                     Cancel
                                 </Button>
-                                <Button className="flex-1">Confirm Change</Button>
+                                <div className="flex-1">
+                                    <LoadingButton text="Confirm Change" loading={loading} type="submit"></LoadingButton>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </form>
                 </DialogContent>
             </Dialog>
         </>
