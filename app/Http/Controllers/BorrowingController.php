@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Borrowing;
 use App\Models\Category;
 use App\Models\Item;
+use Auth;
 use DB;
 use Illuminate\Http\Request;
 
@@ -23,12 +24,13 @@ class BorrowingController extends Controller
         // }
 
         $borrowings = $query->paginate(10);
-
+        $user = auth()->user();
         // $categories = Category::all();
 
         return inertia('modules/borrowings/index', [
             'borrowings' => $borrowings,
             'filters' => $request->only(['search']),
+            'user' => $user
             // 'categories' => $categories
         ]);
     }

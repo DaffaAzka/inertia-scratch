@@ -37,10 +37,12 @@ Route::group(['middleware' => ['auth']], function () {
         Route::patch('/items/{id}', [ItemController::class, 'update']);
         Route::delete('/items/{id}', [ItemController::class, 'destroy']);
 
-        // Borrowings Routes
-        Route::get('/borrowings', [BorrowingController::class, 'index'])->name('borrowings');
-        Route::post('/borrowings', [BorrowingController::class, 'store']);
+
 
     });
+
+    // Borrowings Routes
+    Route::get('/borrowings', [BorrowingController::class, 'index'])->name('borrowings');
+    Route::post('/borrowings', [BorrowingController::class, 'store']);
 
 });

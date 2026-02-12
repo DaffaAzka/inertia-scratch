@@ -1,10 +1,11 @@
 import AuthLayout from '@/components/layouts/auth-layout';
-import { Borrowing, PaginatedData } from '@/lib/types';
+import { Borrowing, PaginatedData, User } from '@/lib/types';
+import DataTable from './sections/data-table';
 
-export default function IndexPage({ borrowings }: { borrowings: PaginatedData<Borrowing> }) {
+export default function IndexPage({ borrowings, user }: { borrowings: PaginatedData<Borrowing>; user: User }) {
     return (
         <AuthLayout title="Borrowings">
-            <h1>{borrowings.data.toString()} Borrowings</h1>
+            <DataTable borrowings={borrowings.data} userRole={user.role} />
         </AuthLayout>
     );
 }
