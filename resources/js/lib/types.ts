@@ -61,7 +61,7 @@ export enum ItemStatuses {
     DAMAGED = 'damaged',
 }
 
-export type BorrowingStatus = 'pending' | 'approved' | 'rejected' | 'borrowed' | 'returned' | 'late';
+export type BorrowingStatus = 'pending' | 'approved' | 'rejected' | 'borrowed' | 'returned';
 
 export type Borrowing = {
     id: number;

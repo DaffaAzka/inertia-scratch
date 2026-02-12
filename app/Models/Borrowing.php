@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
@@ -33,5 +34,20 @@ class Borrowing extends Model
     public function approver(): BelongsTo
     {
         return $this->belongsTo(User::class, 'approved_by');
+    }
+
+    /**
+     * Scope by roles.
+     */
+
+    public function scopeFilteringByRole(Builder $query)
+    {
+        $user = auth()->user();
+
+        if ($user->role === 'user') {
+            return $query->where('borrower_id', $user->id);
+        }
+
+        return $query;
     }
 }

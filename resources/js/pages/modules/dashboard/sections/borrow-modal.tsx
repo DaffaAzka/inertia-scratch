@@ -90,7 +90,7 @@ export default function BorrowModal({ item, isOpen, onClose }: { item: Item; isO
                         </div>
 
                         <div className="flex flex-col gap-4">
-                            <div className="">
+                            <div className="flex flex-col gap-3">
                                 <div className="flex flex-col-reverse gap-3 sm:flex-row sm:items-center sm:justify-between">
                                     <h3 className="text-2xl font-bold text-gray-900 dark:text-white">{item.name}</h3>
 

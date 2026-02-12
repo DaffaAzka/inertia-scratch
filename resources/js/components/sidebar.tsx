@@ -64,19 +64,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                         isShow: true,
                     },
                     {
-                        title: 'Manage Fines',
-                        url: '#',
-                        isActive: true,
-                        isShow: authorizations(auth.role, ['admin', 'officer']),
-                    },
-                    {
                         title: 'Return Report',
-                        url: '#',
-                        isActive: true,
-                        isShow: authorizations(auth.role, ['admin', 'officer']),
-                    },
-                    {
-                        title: 'Fine Report',
                         url: '#',
                         isActive: true,
                         isShow: authorizations(auth.role, ['admin', 'officer']),

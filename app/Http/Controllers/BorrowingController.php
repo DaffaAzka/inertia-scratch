@@ -17,7 +17,7 @@ class BorrowingController extends Controller
     public function index(Request $request)
     {
 
-        $query = Borrowing::with(['item', 'borrower'])->latest();
+        $query = Borrowing::with(['item', 'item.category', 'borrower'])->filteringByRole()->latest();
 
         // if ($request->has('search') && $request->search) {
         //     $query = $query->where('name', 'like', '%' . $request->search . '%')->orWhere('code', 'like', '%' . $request->search . '%')->orWhere('description', 'like', '%' . $request->search . '%');
