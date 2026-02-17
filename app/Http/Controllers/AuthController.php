@@ -83,7 +83,7 @@ class AuthController extends Controller
 
         $categories = Category::all();
 
-        return inertia('modules/dashboard/dashboard', [
+        return inertia('modules/dashboard/page', [
             'items' => $items,
             'filters' => $request->only(['search']),
             'categories' => $categories

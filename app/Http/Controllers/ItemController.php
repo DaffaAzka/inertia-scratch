@@ -27,7 +27,7 @@ class ItemController extends Controller
 
         $categories = Category::all();
 
-        return inertia('modules/items/items', [
+        return inertia('modules/items/page', [
             'items' => $items,
             'filters' => $request->only(['search']),
             'categories' => $categories

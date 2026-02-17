@@ -27,7 +27,7 @@ class BorrowingController extends Controller
         $user = auth()->user();
         // $categories = Category::all();
 
-        return inertia('modules/borrowings/index', [
+        return inertia('modules/borrowings/page', [
             'borrowings' => $borrowings,
             'filters' => $request->only(['search']),
             'user' => $user

@@ -21,7 +21,7 @@ class CategoryController extends Controller
         }
 
         $categories = $query->paginate(10);
-        return Inertia::render("modules/categories/categories", ["categories" => $categories, "filters" => $request->only('search')]);
+        return Inertia::render("modules/categories/page", ["categories" => $categories, "filters" => $request->only('search')]);
     }
 
     /**
