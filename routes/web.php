@@ -4,6 +4,7 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BorrowingController;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ItemController;
+use App\Http\Controllers\ReturnItemController;
 use App\Models\Borrowing;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
@@ -36,9 +37,6 @@ Route::group(['middleware' => ['auth']], function () {
         Route::post('/items', [ItemController::class, 'store']);
         Route::patch('/items/{id}', [ItemController::class, 'update']);
         Route::delete('/items/{id}', [ItemController::class, 'destroy']);
-
-
-
     });
 
     // Borrowings Routes
@@ -46,4 +44,6 @@ Route::group(['middleware' => ['auth']], function () {
     Route::post('/borrowings', [BorrowingController::class, 'store']);
     Route::patch('/borrowings/{id}/update-status', [BorrowingController::class, 'updateStatus']);
 
+    // Return Items Route
+    Route::get('/return-items', [ReturnItemController::class, 'index'])->name('return-items');
 });

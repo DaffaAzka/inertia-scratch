@@ -59,7 +59,7 @@ export function AppSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
                 items: [
                     {
                         title: 'Manage Returns',
-                        url: '#',
+                        url: '/return-items',
                         isActive: true,
                         isShow: true,
                     },
